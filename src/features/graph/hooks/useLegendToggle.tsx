@@ -34,13 +34,12 @@ export const useLegendToggle = (series: LegendSeries[]) => {
         const currentColor = colors[s.key];
         return (
           <li key={s.key} className="flex flex-col gap-1">
-            <div
-              className="flex items-center gap-1 cursor-pointer select-none"
-              onClick={() => handleToggle(s.key)}
-            >
-              <span
-                className="inline-block w-3 h-3 rounded-sm border"
-                style={{ backgroundColor: active ? currentColor : "#e5e7eb" }}
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={active}
+                onChange={() => handleToggle(s.key)}
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-400"
               />
               <span
                 className={
@@ -51,7 +50,7 @@ export const useLegendToggle = (series: LegendSeries[]) => {
               >
                 {s.label}
               </span>
-            </div>
+            </label>
 
             {/* 색상 피커 버튼 */}
             <div className="relative">
