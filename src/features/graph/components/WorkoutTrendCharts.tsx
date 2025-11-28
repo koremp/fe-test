@@ -64,7 +64,7 @@ export const WorkoutTrendStackedArea: React.FC<Props> = ({ data }) => {
       </h3>
 
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data} stackOffset="expand">
+        <AreaChart data={data}>
           <XAxis dataKey="week" />
           <YAxis tickFormatter={(v) => `${v}`} />
           <Tooltip formatter={(v: number) => `${v}`} />
