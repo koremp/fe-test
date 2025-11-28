@@ -13,18 +13,25 @@ import {
 } from "recharts";
 import type { CoffeeBrand } from "../types";
 import { useLegendToggle, type LegendSeries } from "../hooks/useLegendToggle";
+import { getChartColor } from "../lib/chartColors";
 
 interface Props {
   data: CoffeeBrand[];
 }
 
-const BAR_SERIES: LegendSeries[] = [
-  { key: "popularity", label: "인기도", color: "#10b981" },
-];
+// 회사(브랜드) 기준 레전드 시리즈
+const getCoffeeBrandSeries = (data: CoffeeBrand[]): LegendSeries[] =>
+  data.map((d, i) => ({
+    key: d.brand,
+    label: d.brand,
+    color: getChartColor(i),
+  }));
 
 export const CoffeeBrandsBarChart: React.FC<Props> = ({ data }) => {
-  const { activeKeys, renderLegend } = useLegendToggle(BAR_SERIES);
-  const active = activeKeys.includes("popularity");
+  const brandSeries = getCoffeeBrandSeries(data);
+  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+
+  const activeData = data.filter((d) => activeKeys.includes(d.brand));
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg border">
@@ -32,27 +39,32 @@ export const CoffeeBrandsBarChart: React.FC<Props> = ({ data }) => {
         ☕ 커피 브랜드 - 바 차트
       </h3>
       <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={data}>
+        <BarChart data={activeData}>
           <XAxis dataKey="brand" />
           <YAxis />
           <Tooltip />
           <Legend content={renderLegend()} />
-          {active && <Bar dataKey="popularity" fill="#10b981" />}
+          <Bar dataKey="popularity">
+            {activeData.map((_, i) => (
+              <Cell key={i} fill={getChartColor(i)} />
+            ))}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-const DONUT_SERIES: LegendSeries[] = [
-  { key: "popularity", label: "인기도", color: "#10b981" },
-];
-
 export const CoffeeBrandsDonutChart: React.FC<Props> = ({ data }) => {
-  const { activeKeys, renderLegend } = useLegendToggle(DONUT_SERIES);
-  const active = activeKeys.includes("popularity");
-  const pieData = data.map((d) => ({ name: d.brand, value: d.popularity }));
-  const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#ef4444"];
+  const brandSeries = getCoffeeBrandSeries(data);
+  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+
+  const pieData = data
+    .filter((d) => activeKeys.includes(d.brand))
+    .map((d) => ({
+      name: d.brand,
+      value: d.popularity,
+    }));
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-lg border">
@@ -61,21 +73,19 @@ export const CoffeeBrandsDonutChart: React.FC<Props> = ({ data }) => {
       </h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
-          {active && (
-            <Pie
-              data={pieData}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              innerRadius={40}
-            >
-              {pieData.map((_, i) => (
-                <Cell key={i} fill={COLORS[i % COLORS.length]} />
-              ))}
-            </Pie>
-          )}
+          <Pie
+            data={pieData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={80}
+            innerRadius={40}
+          >
+            {pieData.map((entry, i) => (
+              <Cell key={entry.name} fill={getChartColor(i)} />
+            ))}
+          </Pie>
           <Tooltip />
           <Legend content={renderLegend()} />
         </PieChart>
