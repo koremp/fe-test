@@ -82,7 +82,6 @@ function GraphRouteComponent() {
           <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             📊 데이터 시각화 대시보드
           </h1>
-          <p className="text-xl text-gray-600">14개 차트 완전 구현</p>
         </div>
 
         {/* 1. 바/도넛 차트 */}
