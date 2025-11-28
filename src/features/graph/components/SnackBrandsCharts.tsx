@@ -1,4 +1,3 @@
-// src/features/graph/components/SnackBrandsCharts.tsx
 import {
   ResponsiveContainer,
   BarChart,
@@ -24,12 +23,12 @@ const getSnackBrandSeries = (data: SnackBrand[]): LegendSeries[] =>
   data.map((d, i) => ({
     key: d.name,
     label: d.name,
-    color: getChartColor(i),
+    color: getChartColor(i), // 초기 색상
   }));
 
 export const SnackBrandsBarChart: React.FC<Props> = ({ data }) => {
-  const brandSeries = getSnackBrandSeries(data);
-  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+  const series = getSnackBrandSeries(data);
+  const { activeKeys, colors, renderLegend } = useLegendToggle(series);
 
   const activeData = data.filter((d) => activeKeys.includes(d.name));
 
@@ -45,8 +44,8 @@ export const SnackBrandsBarChart: React.FC<Props> = ({ data }) => {
           <Tooltip />
           <Legend content={renderLegend()} />
           <Bar dataKey="share">
-            {activeData.map((_, i) => (
-              <Cell key={i} fill={getChartColor(i)} />
+            {activeData.map((d) => (
+              <Cell key={d.name} fill={colors[d.name]} />
             ))}
           </Bar>
         </BarChart>
@@ -56,8 +55,8 @@ export const SnackBrandsBarChart: React.FC<Props> = ({ data }) => {
 };
 
 export const SnackBrandsDonutChart: React.FC<Props> = ({ data }) => {
-  const brandSeries = getSnackBrandSeries(data);
-  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+  const series = getSnackBrandSeries(data);
+  const { activeKeys, colors, renderLegend } = useLegendToggle(series);
 
   const pieData = data
     .filter((d) => activeKeys.includes(d.name))
@@ -82,8 +81,8 @@ export const SnackBrandsDonutChart: React.FC<Props> = ({ data }) => {
             outerRadius={80}
             innerRadius={40}
           >
-            {pieData.map((entry, i) => (
-              <Cell key={entry.name} fill={getChartColor(i)} />
+            {pieData.map((entry) => (
+              <Cell key={entry.name} fill={colors[entry.name]} />
             ))}
           </Pie>
           <Tooltip />

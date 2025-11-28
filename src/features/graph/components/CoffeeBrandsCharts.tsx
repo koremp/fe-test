@@ -1,4 +1,3 @@
-// src/features/graph/components/CoffeeBrandsCharts.tsx
 import {
   ResponsiveContainer,
   BarChart,
@@ -13,7 +12,7 @@ import {
 } from "recharts";
 import type { CoffeeBrand } from "../types";
 import { useLegendToggle, type LegendSeries } from "../hooks/useLegendToggle";
-import { getChartColor } from "../lib/chartColors";
+import { getChartColor } from "@/features/graph/lib/chartColors";
 
 interface Props {
   data: CoffeeBrand[];
@@ -24,12 +23,12 @@ const getCoffeeBrandSeries = (data: CoffeeBrand[]): LegendSeries[] =>
   data.map((d, i) => ({
     key: d.brand,
     label: d.brand,
-    color: getChartColor(i),
+    color: getChartColor(i), // 초기 색상(피커로 변경 가능)
   }));
 
 export const CoffeeBrandsBarChart: React.FC<Props> = ({ data }) => {
-  const brandSeries = getCoffeeBrandSeries(data);
-  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+  const series = getCoffeeBrandSeries(data);
+  const { activeKeys, colors, renderLegend } = useLegendToggle(series);
 
   const activeData = data.filter((d) => activeKeys.includes(d.brand));
 
@@ -45,8 +44,8 @@ export const CoffeeBrandsBarChart: React.FC<Props> = ({ data }) => {
           <Tooltip />
           <Legend content={renderLegend()} />
           <Bar dataKey="popularity">
-            {activeData.map((_, i) => (
-              <Cell key={i} fill={getChartColor(i)} />
+            {activeData.map((d) => (
+              <Cell key={d.brand} fill={colors[d.brand]} />
             ))}
           </Bar>
         </BarChart>
@@ -56,8 +55,8 @@ export const CoffeeBrandsBarChart: React.FC<Props> = ({ data }) => {
 };
 
 export const CoffeeBrandsDonutChart: React.FC<Props> = ({ data }) => {
-  const brandSeries = getCoffeeBrandSeries(data);
-  const { activeKeys, renderLegend } = useLegendToggle(brandSeries);
+  const series = getCoffeeBrandSeries(data);
+  const { activeKeys, colors, renderLegend } = useLegendToggle(series);
 
   const pieData = data
     .filter((d) => activeKeys.includes(d.brand))
@@ -82,8 +81,8 @@ export const CoffeeBrandsDonutChart: React.FC<Props> = ({ data }) => {
             outerRadius={80}
             innerRadius={40}
           >
-            {pieData.map((entry, i) => (
-              <Cell key={entry.name} fill={getChartColor(i)} />
+            {pieData.map((entry) => (
+              <Cell key={entry.name} fill={colors[entry.name]} />
             ))}
           </Pie>
           <Tooltip />
