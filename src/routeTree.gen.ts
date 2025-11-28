@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GraphIndexRouteImport } from './routes/graph.index'
 import { Route as BoardIndexRouteImport } from './routes/board.index'
+import { Route as BoardNewRouteImport } from './routes/board.new'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,16 +35,23 @@ const BoardIndexRoute = BoardIndexRouteImport.update({
   path: '/board/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BoardNewRoute = BoardNewRouteImport.update({
+  id: '/board/new',
+  path: '/board/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/board/new': typeof BoardNewRoute
   '/board': typeof BoardIndexRoute
   '/graph': typeof GraphIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/board/new': typeof BoardNewRoute
   '/board': typeof BoardIndexRoute
   '/graph': typeof GraphIndexRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/board/new': typeof BoardNewRoute
   '/board/': typeof BoardIndexRoute
   '/graph/': typeof GraphIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/board' | '/graph'
+  fullPaths: '/' | '/login' | '/board/new' | '/board' | '/graph'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/board' | '/graph'
-  id: '__root__' | '/' | '/login' | '/board/' | '/graph/'
+  to: '/' | '/login' | '/board/new' | '/board' | '/graph'
+  id: '__root__' | '/' | '/login' | '/board/new' | '/board/' | '/graph/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  BoardNewRoute: typeof BoardNewRoute
   BoardIndexRoute: typeof BoardIndexRoute
   GraphIndexRoute: typeof GraphIndexRoute
 }
@@ -99,12 +109,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BoardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/board/new': {
+      id: '/board/new'
+      path: '/board/new'
+      fullPath: '/board/new'
+      preLoaderRoute: typeof BoardNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  BoardNewRoute: BoardNewRoute,
   BoardIndexRoute: BoardIndexRoute,
   GraphIndexRoute: GraphIndexRoute,
 }

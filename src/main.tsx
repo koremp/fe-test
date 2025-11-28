@@ -34,7 +34,7 @@ if (!rootElement.innerHTML) {
 
         {import.meta.env.DEV ? (
           <>
-            <ReactQueryDevtools initialIsOpen={false} />
+            <TanStackRouterDevtools router={router} initialIsOpen={false} />
             <ReactQueryDevtools initialIsOpen={false} />
           </>
         ) : null}
